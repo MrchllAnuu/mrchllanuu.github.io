@@ -1,0 +1,100 @@
+<style>
+section{width:100%;height:100%;padding:15px;margin:0;position:relative}
+.clearLink{position:absolute;top:65px;right:20px;padding:5px;background:#FF2500;color:#fff;border:1px solid #cdcdcd;border-radius:3px;font-size:14px;font-weight:bold;text-shadow:rgba(255,255,255,0.5) 0 1px 2px;text-decoration:none;outline:none}
+.clearLink:hover{background:#00BAFF}
+textarea{width:32%;min-height:150px;margin:15px 2% 0 0;float:left;line-height:14pt;padding:10px;color:#444!important;border:1px solid #cdcdcd;-webkit-box-shadow: -3px 4px 12px 4px rgba(185,185,185,0.88); 
+box-shadow: -3px 4px 12px 4px rgba(185,185,185,0.88);border-radius:3px;transition:all 0.2s ease-in-out;appearance:none;-moz-appearance:none;-webkit-appearance:none}
+textarea:focus{border-color:#f89000}textarea#js{margin:15px 0 0 0}
+iframe{width:100%;margin:15px 0;border:1px solid #cdcdcd;border-radius:3px;min-height:400px;margin:15px 0 0 0;-webkit-box-shadow: -3px 4px 12px 4px rgba(185,185,185,0.88); 
+box-shadow: -3px 4px 12px 4px rgba(185,185,185,0.88);}input,section label{display:none}
+  
+@media screen and (max-width:800px){
+.hidden,.htmlbox,.cssbox,.jsbox{display:none}
+.codingtab{position:relative;padding:10px;margin:10px auto}
+.codingtab label{display:inline-block;margin:0 10px;padding:5px;font-weight:bold;}
+textarea{width:100%;}
+.codingtab label.st,.codingtab label.dw,.codingtab label.tg{border-bottom:2px solid transparent;transition:all .5s ease;opacity:.5;}
+  
+#htmlbox:checked ~ .htmlbox{display:inline-block}
+#htmlbox:checked ~ .codingtab label.st,#cssbox:checked ~ .codingtab label.dw,#jsbox:checked ~ .codingtab label.tg{border-color:#f89000;opacity:1;background:#008CFF;color:#fff;border-radius:5px;}
+#cssbox:checked ~ .cssbox{display:inline-block}
+#jsbox:checked ~ .jsbox{display:inline-block}}
+</style>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+<section>
+  <h2>Code Live Editor</h2>
+<br/><a class='clearLink' onClick='document.location.reload(true)' title='Click to clear all'>clear</a>
+<input checked='checked' class='hidden' id='htmlbox' name='radio' type='radio'/>
+<input class='hidden' id='cssbox' name='radio' type='radio'/>
+<input class='hidden' id='jsbox' name='radio' type='radio'/>
+<div class='codingtab'>
+<label class='st' for='htmlbox'>HTML</label>
+<label class='dw' for='cssbox'>CSS</label>
+<label class='tg' for='jsbox'>Javascript</label>
+</div>
+<textarea autocapitalize='off' class='htmlbox' id='html' placeholder='HTML' value=''></textarea>
+<textarea autocapitalize='off' class='cssbox' id='css' placeholder='CSS' value=''></textarea>
+<textarea autocapitalize='off' class='jsbox' id='js' placeholder='JavaScript' value=''></textarea>
+<iframe id='preview'></iframe>
+</section>
+<script>/*<![CDATA[*/
+/* source : https://www.sapngoding.my.id */
+$(document).ready(function(){
+
+  // Publish output from HTMl, CSS, and JS textareas in the iframe below
+  onload=(document).onkeyup=function(){
+    (document.getElementById("preview").contentWindow.document).write(
+      html.value+"<style>"+css.value+"<\/style><script>"+js.value+"<\/script>"
+    );
+    (document.getElementById("preview").contentWindow.document).close()
+  };
+
+  // Pressing the Tab key inserts 2 spaces instead of shifting focus
+  $("textarea").keydown(function(event){
+    if(event.keyCode === 9){
+      var start = this.selectionStart;
+      var end = this.selectionEnd;
+      var $this = $(this);
+      var value = $this.val();
+      $this.val(value.substring(0, start)+"  "+value.substring(end));
+      this.selectionStart = this.selectionEnd = start+1;
+      event.preventDefault();
+    }
+  });
+
+  // Store contents of textarea in sessionStorage
+  $("textarea").keydown(function(){
+      sessionStorage[$(this).attr("id")] = $(this).val();
+  });
+  $("#html").html(sessionStorage["html"]);
+  $("#css").html(sessionStorage["css"]);
+  $("#js").html(sessionStorage["js"]);
+  function init() {
+    if (sessionStorage["html"]) {
+        $("#html").val(sessionStorage["html"]);
+      }
+    if (sessionStorage["css"]) {
+        $("#css").val(sessionStorage["css"]);
+      }  
+    if (sessionStorage["js"]) {
+        $("#js").val(sessionStorage["js"]);
+      }
+  };
+
+  // Clear textareas with button
+  $(".clearLink").click(clearAll);
+
+  function clearAll(){
+    document.getElementById("html").value = "";
+    document.getElementById("css").value = "";
+    document.getElementById("js").value = "";
+    sessionStorage.clear();
+  }
+
+});
+function reloadpage()
+{
+location.reload()
+}
+   
+/*]]>*/</script>
